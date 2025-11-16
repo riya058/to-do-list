@@ -1,4 +1,6 @@
 package com.example.myapp.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
@@ -6,7 +8,6 @@ public class TaskModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String description;
 
@@ -16,11 +17,14 @@ public class TaskModel {
     @Enumerated(EnumType.STRING)
     private Status status;     // TODO, IN_PROGRESS, DONE
 
-    // ✅ Always add empty constructor for JPA
+    @ManyToOne
+    @JoinColumn(name = "user_id") // Hibernate will create user_id column
+    @JsonIgnoreProperties
+    private UserModel user;
+
     public TaskModel() {
     }
 
-    // ✅ Optional constructor (helps when creating objects in code)
     public TaskModel(String title, String description, Priority priority, Status status) {
         this.title = title;
         this.description = description;
@@ -28,11 +32,9 @@ public class TaskModel {
         this.status = status;
     }
 
-    // ✅ Getters and Setters
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -40,7 +42,6 @@ public class TaskModel {
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -48,7 +49,6 @@ public class TaskModel {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -56,7 +56,6 @@ public class TaskModel {
     public Priority getPriority() {
         return priority;
     }
-
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
@@ -64,19 +63,12 @@ public class TaskModel {
     public Status getStatus() {
         return status;
     }
-
     public void setStatus(Status status) {
         this.status = status;
     }
-}
 
-// Enums for Priority and Status
-enum Priority {
-    HIGH, MEDIUM, LOW
-}
-
-enum Status {
-    TODO, IN_PROGRESS, DONE
+    public UserModel getUser() { return user; }
+    public void setUser(UserModel user) { this.user = user; }
 }
 
 
