@@ -21,8 +21,8 @@ public class TaskService  {
         this.userRepository = userRepository;
     }
 
-    public List<TaskModel> getTasksByUserId(Long userId) {
-        return taskRepository.findByUser_Id(userId);
+    public List<TaskModel> getTasksByUserId(String username) {
+        return taskRepository.findByUsername(username);
     }
 
     public TaskModel getTaskByID(Long id){
@@ -33,15 +33,15 @@ public class TaskService  {
         UserModel user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        taskModel.setUser(user);
+        taskModel.setUsername(user.username);
         return taskRepository.save(taskModel);
     }
 
 
 
-    public TaskModel updateTask(Long id, TaskModel updatedTask, Long userId) {
+    public TaskModel updateTask(Long id, TaskModel updatedTask, String username) {
         return taskRepository.findById(id).map(task -> {
-            if (!task.getUser().getId().equals(userId)) return null;
+            if (!task.getUsername().equals(username)) return null;
 
             task.setTitle(updatedTask.getTitle());
             task.setDescription(updatedTask.getDescription());
@@ -52,9 +52,9 @@ public class TaskService  {
         }).orElse(null);
     }
 
-    public boolean deleteTask(Long id, Long userId) {
+    public boolean deleteTask(Long id, String username) {
         return taskRepository.findById(id).map(task -> {
-            if (!task.getUser().getId().equals(userId)) return false;
+            if (!task.getUsername().equals(username)) return false;
             taskRepository.delete(task);
             return true;
         }).orElse(false);
@@ -67,7 +67,7 @@ public class TaskService  {
                 task.getDescription(),
                 task.getPriority().name(),
                 task.getStatus().name(),
-                task.getUser().getId()
+                task.getUsername()
         );
     }
 

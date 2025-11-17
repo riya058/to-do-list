@@ -25,7 +25,7 @@ public class TaskController {
 
     @GetMapping
     public List<TaskResponseDTO> getAllTasks(@AuthenticationPrincipal UserDetailsImpl currentUser) {
-        return taskService.getTasksByUserId(currentUser.getId())
+        return taskService.getTasksByUserId(currentUser.getUsername())
                 .stream()
                 .map(taskService::convertToDTO)
                 .collect(Collectors.toList());
@@ -38,7 +38,7 @@ public class TaskController {
     ) {
         TaskModel task = taskService.getTaskByID(id);
 
-        if (task == null || !task.getUser().getId().equals(currentUser.getId())) {
+        if (task == null || !task.getUsername().equals(currentUser.getUsername())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not allowed");
         }
 
@@ -61,7 +61,7 @@ public class TaskController {
             @RequestBody TaskModel updatedTask,
             @AuthenticationPrincipal UserDetailsImpl currentUser
     ) {
-        TaskModel result = taskService.updateTask(id, updatedTask, currentUser.getId());
+        TaskModel result = taskService.updateTask(id, updatedTask, currentUser.getUsername());
         if (result == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not allowed");
         return ResponseEntity.ok(result);
     }
@@ -71,7 +71,7 @@ public class TaskController {
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetailsImpl currentUser
     ) {
-        boolean ok = taskService.deleteTask(id, currentUser.getId());
+        boolean ok = taskService.deleteTask(id, currentUser.getUsername());
         if (!ok) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not allowed");
         return ResponseEntity.ok("Deleted");
     }

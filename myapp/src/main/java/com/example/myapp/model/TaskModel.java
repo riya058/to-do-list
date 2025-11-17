@@ -17,10 +17,7 @@ public class TaskModel {
     @Enumerated(EnumType.STRING)
     private Status status;     // TODO, IN_PROGRESS, DONE
 
-    @ManyToOne
-    @JoinColumn(name = "user_id") // Hibernate will create user_id column
-    @JsonIgnoreProperties
-    private UserModel user;
+    private String username;
 
     public TaskModel() {
     }
@@ -67,8 +64,8 @@ public class TaskModel {
         this.status = status;
     }
 
-    public UserModel getUser() { return user; }
-    public void setUser(UserModel user) { this.user = user; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 }
 
 

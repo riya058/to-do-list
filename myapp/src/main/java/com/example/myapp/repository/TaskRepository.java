@@ -7,7 +7,7 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<TaskModel, Long> {
-    List<TaskModel> findByUser_Id(Long userId);
+    List<TaskModel> findByUsername(String username);
 
 
 }

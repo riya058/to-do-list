@@ -13,7 +13,7 @@ public class UserModel {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;
+    public String username;
 
     @Column(nullable = false)
     @JsonIgnore
